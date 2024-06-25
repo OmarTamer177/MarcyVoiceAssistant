@@ -3,7 +3,6 @@ import time
 import playsound
 import speech_recognition as rs
 from gtts import gTTS
-from google.cloud import texttospeech
 
 
 def speak(text):
