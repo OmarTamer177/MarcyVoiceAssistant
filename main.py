@@ -1,3 +1,4 @@
+import sys
 import speech_recognition as sr
 import pyttsx3
 import pywhatkit
@@ -34,16 +35,24 @@ class Assistant:
             return ""
         return command
 
+    # Function to take text input (for testing purpose)
+    def take_command_text(self):
+        command = input()
+        return command
+
+    # Function to handle the commands
     def handle_command(self, command):
         if 'bye' in command:
-            self.talk("see you soon bro!")
+            self.talk("see you soon!")
+            sys.exit()
         elif 'time' in command:
-            self.talk("time is right now")
+            self.talk("time is right now")   # Dummy code to be replaced
         else:
             self.talk("I Can't understand you")
 
 
-Marcy = Assistant()
-
-Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
-Marcy.handle_command(Marcy.take_command())
+if __name__ == "__main__":
+    Marcy = Assistant()
+    Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
+    while True:
+        Marcy.handle_command(Marcy.take_command_text())
