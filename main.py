@@ -2,12 +2,15 @@ import sys
 import speech_recognition as sr
 import pyttsx3
 import datetime
+import subprocess
 import pywhatkit as pwk
 import wikipedia as wiki
+import pyjokes
+import openai
 
 
 class Assistant:
-    def __init__(self):
+    def __init__(self, wake_word):
         # Initialize the Speech Recognizer and Text To Speech engines
         self.recognizer = sr.Recognizer()
         self.tts_engine = pyttsx3.init()
@@ -16,24 +19,26 @@ class Assistant:
         voices = self.tts_engine.getProperty('voices')
         self.tts_engine.setProperty('voice', voices[1].id)
 
+        # Wake word
+        self.wake_word = wake_word
+
     # Function to convert text to speech
     def talk(self, text):
-        print(text)
-        self.tts_engine.say(text)
-        self.tts_engine.runAndWait()
+        print(text)                   # Print the text along
+        self.tts_engine.say(text)     # Add text to the queue to be said
+        self.tts_engine.runAndWait()  # Say everything in the queue
 
     # Function to take voice input
     def take_command(self):
         try:
             with sr.Microphone() as source:
-                print("Listening...")
                 self.recognizer.adjust_for_ambient_noise(source)
                 audio = self.recognizer.listen(source)
                 command = self.recognizer.recognize_google(audio)
                 command = command.lower()
         except Exception as e:
             print(e)
-            return ""
+            return "commandException"
         return command
 
     # Function to take text input (for testing purpose)
@@ -44,8 +49,8 @@ class Assistant:
     # Function to handle the commands
     def handle_command(self, command):
         # Exit the app
-        if 'bye' in command or 'quit' in command or 'exit' in command:
-            self.talk("see you soon!")
+        if 'bye' in command or 'quit' in command or 'exit' in command or 'see you' in command:
+            self.talk("See you soon!")
             sys.exit()
         # Getting the time in hours and minutes
         elif 'time' in command:
@@ -56,14 +61,36 @@ class Assistant:
         # 3shan el 3yal el 3beta (to be removed)
         elif 'i love you' in command or 'i like you' in command:
             self.talk("Unfortunately, I am a robot and I don't possess human emotions")
+        elif 'joke' in command:
+            joke = pyjokes.get_joke(language='en')
+            self.talk("I have a good joke for you!")
+            self.talk(joke + "\nha ha ha ha!!")
+        elif 'discord' in command:
+            self.talk(command)   # dummy code
+        elif 'google' in command:
+            self.talk(command)   # dummy code
+        elif 'youtube' in command:
+            self.talk(command)   # dummy code
+        elif 'wikipedia' in command:
+            self.talk(command)   # dummy code
+        elif 'story' in command or 'tale' in command:
+            self.talk(command)   # dummy code
+        elif 'whatsapp' in command or 'message' in command:
+            self.talk(command)   # dummy code
+        # If an exception happened while taking the command
+        elif 'commandexception' in command:
+            self.talk("Sorry, I couldn't hear you")
+            self.talk("There might be a problem with your mic")
+            self.talk("Please Check that your microphone is working")
+            self.handle_command("bye")   # exit the system
         # In case the command wasn't handled
         else:
             self.talk("Sorry, I Can't understand you")
 
 
 if __name__ == "__main__":
-    Marcy = Assistant()
-    Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
+    Marcy = Assistant("hey marcy")
+    # Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
     while True:
         Marcy.handle_command(Marcy.take_command_text().lower())
         Marcy.talk("What else can I help you with?")
