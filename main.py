@@ -4,9 +4,9 @@ import pyttsx3
 import datetime
 import subprocess
 import pywhatkit as pwk
-import wikipedia as wiki
 import pyjokes
 import openai
+import wikipediaapi
 
 
 class Assistant:
@@ -65,13 +65,15 @@ class Assistant:
             joke = pyjokes.get_joke(language='en')
             self.talk("I have a good joke for you!")
             self.talk(joke + "\nha ha ha ha!!")
+        elif 'wikipedia' in command:
+            wiki_wiki = wikipediaapi.Wikipedia('Marcy (nowhere@nowhere.com)', 'en')
+            page_py = wiki_wiki.page('Bill gates')
+            self.talk(page_py.summary.split('.\n')[0])
         elif 'discord' in command:
             self.talk(command)   # dummy code
         elif 'google' in command:
             self.talk(command)   # dummy code
         elif 'youtube' in command:
-            self.talk(command)   # dummy code
-        elif 'wikipedia' in command:
             self.talk(command)   # dummy code
         elif 'story' in command or 'tale' in command:
             self.talk(command)   # dummy code
