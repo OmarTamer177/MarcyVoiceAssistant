@@ -3,7 +3,6 @@ import speech_recognition as sr
 import pyttsx3
 import datetime
 import pywhatkit as pwk
-import pyjokes
 import wikipediaapi
 from functions import *
 
@@ -51,43 +50,55 @@ class Assistant:
         if 'bye' in command or 'quit' in command or 'exit' in command or 'see you' in command:
             self.talk("See you soon!")
             sys.exit()
+
         # Getting the time in hours and minutes
         elif 'time' in command:
             self.talk("time is " + datetime.datetime.now().strftime("%H:%M"))
+
         # Getting today's date
         elif 'date' in command:
             self.talk(datetime.datetime.now().strftime("%A, %d %B %Y"))
+
         # 3shan el 3yal el 3beta (to be removed)
         elif 'i love you' in command or 'i like you' in command:
             self.talk("Unfortunately, I am a robot and I don't possess human emotions")
+
         elif 'joke' in command:
             joke = pyjokes.get_joke(language='en')
             self.talk("I have a good joke for you!")
             self.talk(joke + "\nha ha ha ha!!")
+
         elif 'wikipedia' in command or 'summary' in command:
             wiki_wiki = wikipediaapi.Wikipedia('Marcy (nowhere@nowhere.com)', 'en')
             page_py = wiki_wiki.page('Bill gates')
             self.talk(page_py.summary.split('.\n')[0])
+
         elif 'whatsapp' in command or 'message' in command:
             # Send msg to a group using group_id
             # pwk.sendwhatmsg_to_group_instantly("xxxx", "hello from python", tab_close=True)
             # Send msg to a phone number
             # pwk.sendwhatmsg_to_group_instantly("xxxx", "hello from python", tab_close=True)
             pass
+
         elif 'google' in command:
             pwk.search("minecraft")
+
         elif 'youtube' in command:
             pwk.playonyt("minecraft")
+
         elif 'screenshot' in command:
             pwk.take_screenshot("sc"+datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+
         elif 'weather' in command:
             print(command)   # get the weather by the api
+
         # If an exception happened while taking the command
         elif 'commandexception' in command:
             self.talk("Sorry, I couldn't hear you")
             self.talk("There might be a problem with your mic")
             self.talk("Please Check that your microphone is working")
             self.handle_command("bye")   # exit the system
+
         # In case the command wasn't handled
         else:
             self.talk("Sorry, I Can't understand you")

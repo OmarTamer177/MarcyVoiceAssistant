@@ -1,13 +1,24 @@
+import datetime
 import os
-
+import pyjokes
 import requests
+import wikipediaapi
+import pywhatkit as pwk
 
-API_KEY = open('API_KEY', 'r').read()
+WEATHER_API_KEY = open('API_KEY', 'r').read()
+
+programs = {
+    'discord': '\"C:\\Users\\Otame\\AppData\\Local\\Discord\\app-1.0.9152\\Discord.exe\"',
+    'notepad': '\"C:\\Program Files\\Notepad++\\notepad++.exe\"',
+    'chrome': '\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\"',
+    'krita': '\"C:\\Program Files\\Krita (x64)\\bin\\krita.exe"',
+    'aseprite': '\"C:\\Program Files\\Aseprite\\Aseprite.exe\"',
+}
 
 
-def get_weather(city):
+def get_weather(city: str):
     base = 'http://api.openweathermap.org/data/2.5/weather?'
-    url = base + '&appid=' + API_KEY + '&q=' + city
+    url = base + '&appid=' + WEATHER_API_KEY + '&q=' + city
 
     response = requests.get(url).json()
 
@@ -20,4 +31,37 @@ def get_weather(city):
     return temp_c, humidity, pressure, wind
 
 
-print(get_weather('Cairo'))
+def get_time():
+    return datetime.datetime.now().strftime("%H:%M")
+
+
+def get_date():
+    return datetime.datetime.now().strftime("%A, %d %B %Y")
+
+
+def get_summary(topic: str):
+    wiki = wikipediaapi.Wikipedia('Marcy (nowhere@nowhere.com)', 'en')
+    page = wiki.page(topic)
+    summary = page.summary.split('.\n')
+    return summary
+
+
+def google_search(topic: str):
+    pwk.search(topic)
+
+
+def open_yt_video(topic: str):
+    pwk.playonyt(topic)
+
+
+def take_screenshot():
+    pwk.take_screenshot("ss" + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+
+
+def open_program(program: str):
+    os.startfile(programs[program])
+
+
+def get_joke():
+    joke = pyjokes.get_joke(language='en')
+    return joke
