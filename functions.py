@@ -4,6 +4,7 @@ import pyjokes
 import requests
 import wikipediaapi
 import pywhatkit as pwk
+from contacts import contacts
 
 WEATHER_API_KEY = open('API_KEY', 'r').read()
 
@@ -65,3 +66,12 @@ def open_program(program: str):
 def get_joke():
     joke = pyjokes.get_joke(language='en')
     return joke
+
+
+def send_msg(contact: str, msg: str):
+    # Send msg to a contact using phone number
+    pwk.sendwhatmsg_instantly(contacts[contact], msg, tab_close=True)
+    # Delete the db file (no need for it)
+    os.remove("PyWhatKit_DB.txt")
+
+
