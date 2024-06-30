@@ -2,11 +2,10 @@ import sys
 import speech_recognition as sr
 import pyttsx3
 import datetime
-import subprocess
 import pywhatkit as pwk
 import pyjokes
-import openai
 import wikipediaapi
+from functions import *
 
 
 class Assistant:
@@ -65,20 +64,24 @@ class Assistant:
             joke = pyjokes.get_joke(language='en')
             self.talk("I have a good joke for you!")
             self.talk(joke + "\nha ha ha ha!!")
-        elif 'wikipedia' in command:
+        elif 'wikipedia' in command or 'summary' in command:
             wiki_wiki = wikipediaapi.Wikipedia('Marcy (nowhere@nowhere.com)', 'en')
             page_py = wiki_wiki.page('Bill gates')
             self.talk(page_py.summary.split('.\n')[0])
-        elif 'discord' in command:
-            self.talk(command)   # dummy code
-        elif 'google' in command:
-            self.talk(command)   # dummy code
-        elif 'youtube' in command:
-            self.talk(command)   # dummy code
-        elif 'story' in command or 'tale' in command:
-            self.talk(command)   # dummy code
         elif 'whatsapp' in command or 'message' in command:
-            self.talk(command)   # dummy code
+            # Send msg to a group using group_id
+            # pwk.sendwhatmsg_to_group_instantly("xxxx", "hello from python", tab_close=True)
+            # Send msg to a phone number
+            # pwk.sendwhatmsg_to_group_instantly("xxxx", "hello from python", tab_close=True)
+            pass
+        elif 'google' in command:
+            pwk.search("minecraft")
+        elif 'youtube' in command:
+            pwk.playonyt("minecraft")
+        elif 'screenshot' in command:
+            pwk.take_screenshot("sc"+datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+        elif 'weather' in command:
+            print(command)   # get the weather by the api
         # If an exception happened while taking the command
         elif 'commandexception' in command:
             self.talk("Sorry, I couldn't hear you")
@@ -93,6 +96,6 @@ class Assistant:
 if __name__ == "__main__":
     Marcy = Assistant("hey marcy")
     # Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
-    while True:
-        Marcy.handle_command(Marcy.take_command_text().lower())
-        Marcy.talk("What else can I help you with?")
+    #while True:
+    #    Marcy.handle_command(Marcy.take_command_text().lower())
+    #    Marcy.talk("What else can I help you with?")
