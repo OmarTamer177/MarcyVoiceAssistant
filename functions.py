@@ -17,8 +17,9 @@ programs = {
 }
 
 
+# Function to get weather details from a weather API
 def get_weather(city: str):
-    base = 'http://api.openweathermap.org/data/2.5/weather?'
+    base = 'https://api.openweathermap.org/data/2.5/weather?'
     url = base + '&appid=' + WEATHER_API_KEY + '&q=' + city
 
     response = requests.get(url).json()
@@ -56,6 +57,7 @@ def open_yt_video(topic: str):
 
 
 def take_screenshot():
+    # Take a screenshot given the name to be saved
     pwk.take_screenshot("ss" + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
 
 
@@ -68,10 +70,10 @@ def get_joke():
     return joke
 
 
+# Needs a File with all the contacts (Hidden for privacy)
 def send_msg(contact: str, msg: str):
     # Send msg to a contact using phone number
     pwk.sendwhatmsg_instantly(contacts[contact], msg, tab_close=True)
     # Delete the db file (no need for it)
     os.remove("PyWhatKit_DB.txt")
-
 

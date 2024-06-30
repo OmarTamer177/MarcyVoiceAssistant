@@ -1,10 +1,17 @@
 import sys
 import speech_recognition as sr
 import pyttsx3
-import datetime
-import pywhatkit as pwk
-import wikipediaapi
 from functions import *
+
+
+def get_after(command, word):
+    index = command.split().index(word) + 1
+    after = ""
+    for i in command.split()[index:]:
+        after += i
+        if i != command.split()[len(command.split()) - 1]:
+            after += " "
+    return after
 
 
 class Assistant:
@@ -53,44 +60,63 @@ class Assistant:
 
         # Getting the time in hours and minutes
         elif 'time' in command:
-            self.talk("time is " + datetime.datetime.now().strftime("%H:%M"))
+            self.talk("time is " + get_time())
 
         # Getting today's date
         elif 'date' in command:
-            self.talk(datetime.datetime.now().strftime("%A, %d %B %Y"))
+            self.talk("today is " + get_date())
 
         # 3shan el 3yal el 3beta (to be removed)
         elif 'i love you' in command or 'i like you' in command:
             self.talk("Unfortunately, I am a robot and I don't possess human emotions")
 
+        # Getting a random joke
         elif 'joke' in command:
-            joke = pyjokes.get_joke(language='en')
+            joke = get_joke()
             self.talk("I have a good joke for you!")
             self.talk(joke + "\nha ha ha ha!!")
 
-        elif 'wikipedia' in command or 'summary' in command:
-            wiki_wiki = wikipediaapi.Wikipedia('Marcy (nowhere@nowhere.com)', 'en')
-            page_py = wiki_wiki.page('Bill gates')
-            self.talk(page_py.summary.split('.\n')[0])
+        elif 'wikipedia' in command or 'summary' in command or 'know about' in command or 'tell me about' in command:
+            topic = get_after(command, "about")
+            summary = get_summary(topic)
+            self.talk(summary[0])
 
         elif 'whatsapp' in command or 'message' in command:
-            # Send msg to a group using group_id
-            # pwk.sendwhatmsg_to_group_instantly("xxxx", "hello from python", tab_close=True)
-            # Send msg to a phone number
-            # pwk.sendwhatmsg_to_group_instantly("xxxx", "hello from python", tab_close=True)
-            pass
+            contact = self.take_command_text()
+            msg = self.take_command_text()
+            send_msg(contact, msg)
 
         elif 'google' in command:
-            pwk.search("minecraft")
+            if 'search' in command:
+                topic = get_after(command, "search")
+            else:
+                topic = get_after(command, "google")
+            google_search(topic)
 
-        elif 'youtube' in command:
-            pwk.playonyt("minecraft")
+        elif 'youtube' in command or 'video' in command:
+            if 'about' in command:
+                topic = get_after(command, "about")
+            elif 'video' in command:
+                topic = get_after(command, "video")
+            else:
+                topic = get_after(command, "youtube")
+            open_yt_video(topic)
 
         elif 'screenshot' in command:
-            pwk.take_screenshot("sc"+datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
+            take_screenshot()
 
         elif 'weather' in command:
-            print(command)   # get the weather by the api
+            self.talk("Which city do you want to know about?")
+            city = self.take_command_text()
+            temp, humidity, pressure, wind = get_weather(city)
+            self.talk("In " + city + " temperature is " + str(int(temp)) + " degrees C")
+            self.talk("humidity is " + str(humidity) + "%")
+            self.talk("pressure is " + str(pressure) + " hecto pascals")
+            self.talk("wind speed is " + str(wind) + " miles per hour")
+
+        elif 'program' in command or 'open' in command:
+            program = get_after(command, "open")
+            open_program(program)
 
         # If an exception happened while taking the command
         elif 'commandexception' in command:
@@ -107,6 +133,6 @@ class Assistant:
 if __name__ == "__main__":
     Marcy = Assistant("hey marcy")
     # Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
-    #while True:
-    #    Marcy.handle_command(Marcy.take_command_text().lower())
-    #    Marcy.talk("What else can I help you with?")
+    while True:
+        Marcy.handle_command(Marcy.take_command_text().lower())
+        Marcy.talk("What else can I help you with?")
