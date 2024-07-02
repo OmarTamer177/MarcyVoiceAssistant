@@ -76,4 +76,3 @@ def send_msg(contact: str, msg: str):
     pwk.sendwhatmsg_instantly(contacts[contact], msg, tab_close=True)
     # Delete the db file (no need for it)
     os.remove("PyWhatKit_DB.txt")
-

@@ -15,7 +15,7 @@ def get_after(command, word):
 
 
 class Assistant:
-    def __init__(self, wake_word):
+    def __init__(self, name):
         # Initialize the Speech Recognizer and Text To Speech engines
         self.recognizer = sr.Recognizer()
         self.tts_engine = pyttsx3.init()
@@ -25,7 +25,7 @@ class Assistant:
         self.tts_engine.setProperty('voice', voices[1].id)
 
         # Wake word
-        self.wake_word = wake_word
+        self.name = name
 
     # Function to convert text to speech
     def talk(self, text):
@@ -66,10 +66,6 @@ class Assistant:
         elif 'date' in command:
             self.talk("today is " + get_date())
 
-        # 3shan el 3yal el 3beta (to be removed)
-        elif 'i love you' in command or 'i like you' in command:
-            self.talk("Unfortunately, I am a robot and I don't possess human emotions")
-
         # Getting a random joke
         elif 'joke' in command:
             joke = get_joke()
@@ -82,9 +78,12 @@ class Assistant:
             self.talk(summary[0])
 
         elif 'whatsapp' in command or 'message' in command:
+            self.talk("who do you want to message?")
             contact = self.take_command_text()
+            self.talk("what do you want to say?")
             msg = self.take_command_text()
             send_msg(contact, msg)
+            self.talk("message sent!")
 
         elif 'google' in command:
             if 'search' in command:
@@ -131,8 +130,8 @@ class Assistant:
 
 
 if __name__ == "__main__":
-    Marcy = Assistant("hey marcy")
-    # Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
+    Marcy = Assistant("marcy")
+    Marcy.talk("Hi, I am Marcy, your virtual assistant, how can I help you?")
     while True:
         Marcy.handle_command(Marcy.take_command_text().lower())
         Marcy.talk("What else can I help you with?")
